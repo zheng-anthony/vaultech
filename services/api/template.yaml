@@ -1,0 +1,21 @@
+# Serverless Application Model (SAM) CLI, spins up an environment to mimic API gateway and lambda awaiting requests
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  VaultechApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: src.main.handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          PYTHONPATH: /var/task/src
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
