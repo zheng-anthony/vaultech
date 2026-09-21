@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+Start the Python API on port 3001 using the [API instructions](../../services/api/README.md),
+then run `pnpm dev` here. The home page's **Get files** button requests `/files`;
+Next.js forwards it to the backend's `/files/` endpoint so the browser uses the
+same origin and does not require backend CORS configuration.
+
+The backend defaults to `http://127.0.0.1:3001`. To use a different backend, copy
+`.env.example` to `.env.local`, set `API_BASE_URL`, and restart Next.js. For a
+production deployment, set this variable before building. It is a server-side
+setting and does not need a `NEXT_PUBLIC_` prefix.
+
 First, run the development server:
 
 ```bash
