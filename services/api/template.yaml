@@ -13,6 +13,8 @@ Resources:
       Environment:
         Variables:
           PYTHONPATH: /var/task/src
+          FILES_BUCKET: ""
+          DATABASE_URL: ""
       Events:
         ApiEvent:
           Type: Api
