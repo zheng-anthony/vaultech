@@ -27,11 +27,11 @@ export function DocumentUpload() {
   }
 
   return (
-    <section aria-labelledby="upload-heading" className="w-full max-w-xl rounded-xl border border-foreground/20 p-6">
-      <h1 id="upload-heading" className="text-2xl font-semibold">Upload a document</h1>
-      <p id="upload-help" className="mt-2 text-sm">PDF or TXT, up to 10 MiB.</p>
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-        <label htmlFor="document" className="text-sm font-medium">Document</label>
+    <section aria-labelledby="upload-heading" className="relative rounded-[2rem] bg-panel p-6 shadow-[0_20px_50px_-35px_rgba(53,67,41,0.45)] sm:p-9">
+      <p className="text-sm font-semibold uppercase tracking-[0.14em]">Add to your files</p>
+      <h2 id="upload-heading" className="mt-3 font-serif text-4xl leading-tight tracking-tight sm:text-5xl">Upload a document</h2>
+      <p id="upload-help" className="mt-3 text-sm leading-relaxed">PDF or TXT, up to 10 MiB.</p>
+      <form onSubmit={handleSubmit} className="mt-7">
         <input
           id="document"
           type="file"
@@ -44,17 +44,27 @@ export function DocumentUpload() {
             setStatus("idle");
             setError(null);
           }}
-          className="w-full rounded-lg border border-foreground/20 p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground disabled:opacity-50"
+          className="peer sr-only"
         />
+        <label
+          htmlFor="document"
+          className="flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-ink/45 bg-canvas/45 px-5 py-8 text-center transition-colors duration-300 ease-out hover:bg-canvas/70 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-ink peer-disabled:cursor-not-allowed peer-disabled:opacity-55"
+        >
+          <svg aria-hidden="true" viewBox="0 0 40 40" fill="none" className="h-10 w-10 stroke-current" strokeWidth="1.5">
+            <path d="M20 27V8m0 0-7 7m7-7 7 7M8 27v4a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="mt-4 max-w-full break-all text-lg font-semibold">{file ? file.name : "Choose a file"}</span>
+          <span className="mt-1 text-sm">{file ? "Choose a different file" : "Select a PDF or TXT document"}</span>
+        </label>
         <button
           type="submit"
           disabled={!file || busy || status === "success"}
-          className="rounded-lg bg-foreground px-6 py-3 font-medium text-background hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-5 w-full rounded-full bg-ink px-6 py-4 text-base font-semibold text-canvas transition-[background-color,transform] duration-300 ease-out hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
         >
-          {status === "preparing" ? "Preparing upload…" : status === "uploading" ? "Uploading…" : "Upload document"}
+          {status === "preparing" ? "Preparing upload…" : status === "uploading" ? "Uploading…" : status === "success" ? "Uploaded" : "Upload document"}
         </button>
       </form>
-      <div role="status" aria-live="polite" className="mt-4 text-sm">
+      <div role="status" aria-live="polite" className="mt-4 text-sm empty:hidden">
         {status === "success" && `${file?.name} uploaded successfully.`}
       </div>
       {error && <p role="alert" className="mt-4 text-sm">{error}</p>}
