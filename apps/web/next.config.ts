@@ -6,7 +6,10 @@ const nextConfig: NextConfig = {
       process.env.API_BASE_URL ?? "http://127.0.0.1:3001"
     ).replace(/\/+$/, "");
 
-    return [{ source: "/files", destination: `${apiBaseUrl}/files/` }];
+    return [
+      { source: "/files", destination: `${apiBaseUrl}/files/` },
+      { source: "/files/presign", destination: `${apiBaseUrl}/files/presign` },
+    ];
   },
 };
 

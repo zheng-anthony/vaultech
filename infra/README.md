@@ -62,6 +62,25 @@ Terraform supplies the bucket name and Python import path to each deployed Lambd
 The database helper is unused; provisioning a database and configuring its URL are
 not part of these deployments yet.
 
+## Upload configuration
+
+The files bucket blocks public access, explicitly uses SSE-S3 encryption, and permits
+browser PUT uploads from `upload_allowed_origins`. Dev defaults to
+`http://localhost:3000`; configure the actual production frontend origin in prod's
+tfvars. CORS does not authenticate requests. Lambda has `s3:PutObject` permission
+under `uploads/*` and `s3:ListBucket` constrained to that prefix. The API further
+limits listing to the verified user's prefix. Downloads and deletion will need
+their own permissions later.
+
+The API Gateway integration explicitly uses payload format 1.0 for the existing
+Python REST resolver. No authorizer is configured yet; the signing handler requires
+a verified authorizer identity and returns 401 on deployed anonymous requests.
+Configure and attach an authorizer, and connect frontend login, before production use.
+
+Review the Terraform plan before applying these bucket settings. If the bucket already
+exists outside this environment's state, import it before applying; SAM itself does
+not provision storage. The code changes alone do not update AWS resources.
+
 ## Read deployment settings
 
 After deployment:

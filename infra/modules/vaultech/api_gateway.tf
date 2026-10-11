@@ -6,10 +6,11 @@ resource "aws_apigatewayv2_api" "main" {
 
 # Connect API Gateway to Lambda
 resource "aws_apigatewayv2_integration" "lambda" {
-  api_id             = aws_apigatewayv2_api.main.id
-  integration_type   = "AWS_PROXY"
-  integration_method = "POST"
-  integration_uri    = aws_lambda_function.api.invoke_arn
+  api_id                 = aws_apigatewayv2_api.main.id
+  integration_type       = "AWS_PROXY"
+  integration_method     = "POST"
+  integration_uri        = aws_lambda_function.api.invoke_arn
+  payload_format_version = "1.0"
 }
 
 # Catch all routes and send to lambda

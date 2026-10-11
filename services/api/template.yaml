@@ -15,6 +15,7 @@ Resources:
           PYTHONPATH: /var/task/src
           FILES_BUCKET: ""
           DATABASE_URL: ""
+          ALLOW_LOCAL_UPLOADS: "false"
       Events:
         ApiEvent:
           Type: Api

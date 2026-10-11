@@ -12,6 +12,17 @@ The backend defaults to `http://127.0.0.1:3001`. To use a different backend, cop
 production deployment, set this variable before building. It is a server-side
 setting and does not need a `NEXT_PUBLIC_` prefix.
 
+The upload form accepts nonempty PDF/TXT files up to 10 MiB. It requests an upload
+ticket through `/files/presign`, then sends the file directly to S3 with the signed
+headers. AWS credentials stay in the Python API. Bucket CORS must allow the web
+origin; changing `API_BASE_URL` does not configure S3 CORS.
+
+For local testing, enable `ALLOW_LOCAL_UPLOADS` in the SAM dev environment file
+as described in the API README. Production signing requires an API Gateway
+authorizer and frontend login integration, which are not configured yet. Uploads
+appear when you click **Get files**. The response shows object keys, byte sizes,
+and modification times; **Load more** fetches another page if needed.
+
 First, run the development server:
 
 ```bash

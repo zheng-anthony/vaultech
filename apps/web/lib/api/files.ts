@@ -1,24 +1,48 @@
-export type FilesResponse = { files: unknown[] };
+export type FileSummary = {
+  key: string;
+  sizeBytes: number;
+  lastModified: string;
+};
 
-export async function getFiles(): Promise<FilesResponse> {
-  const response = await fetch("/files", { cache: "no-store" });
+export type FilesResponse = { files: FileSummary[]; nextToken: string | null };
+
+function isFileSummary(value: unknown): value is FileSummary {
+  return (
+    typeof value === "object" && value !== null &&
+    "key" in value && typeof value.key === "string" &&
+    "sizeBytes" in value && typeof value.sizeBytes === "number" &&
+    Number.isSafeInteger(value.sizeBytes) && value.sizeBytes >= 0 &&
+    "lastModified" in value && typeof value.lastModified === "string" &&
+    Number.isFinite(Date.parse(value.lastModified))
+  );
+}
+
+export async function getFiles(continuationToken?: string): Promise<FilesResponse> {
+  const query = continuationToken
+    ? `?${new URLSearchParams({ continuationToken })}`
+    : "";
+  const response = await fetch(`/files${query}`, { cache: "no-store" });
+  const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
     throw new Error(
-      `Unable to load files (HTTP ${response.status}). Please try again.`,
+      typeof data === "object" && data !== null && "message" in data && typeof data.message === "string"
+        ? data.message
+        : `Unable to load files (HTTP ${response.status}). Please try again.`,
     );
   }
-
-  const data: unknown = await response.json();
 
   if (
     typeof data !== "object" ||
     data === null ||
     !("files" in data) ||
-    !Array.isArray(data.files)
+    !Array.isArray(data.files) ||
+    !data.files.every(isFileSummary) ||
+    !("nextToken" in data) ||
+    !(data.nextToken === null || (typeof data.nextToken === "string" && data.nextToken.length > 0))
   ) {
     throw new Error("The API returned an unexpected response.");
   }
 
-  return data as FilesResponse;
+  return { files: data.files, nextToken: data.nextToken };
 }

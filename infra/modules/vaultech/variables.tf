@@ -12,3 +12,9 @@ variable "lambda_zip_path" {
   description = "Path to the packaged Lambda code and dependencies."
   type        = string
 }
+
+variable "upload_allowed_origins" {
+  description = "Exact frontend origins permitted to upload directly to S3."
+  type        = list(string)
+  default     = []
+}

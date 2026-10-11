@@ -13,3 +13,9 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "upload_allowed_origins" {
+  description = "Frontend origins permitted to upload to the production bucket."
+  type        = list(string)
+  default     = []
+}

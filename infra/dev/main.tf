@@ -21,7 +21,8 @@ provider "aws" {
 module "vaultech" {
   source = "../modules/vaultech"
 
-  name_prefix       = "vaultech"
-  files_bucket_name = "vaultech-files"
-  lambda_zip_path   = abspath("${path.module}/../../services/api/function.zip")
+  name_prefix            = "vaultech"
+  files_bucket_name      = "vaultech-files"
+  lambda_zip_path        = abspath("${path.module}/../../services/api/function.zip")
+  upload_allowed_origins = var.upload_allowed_origins
 }
